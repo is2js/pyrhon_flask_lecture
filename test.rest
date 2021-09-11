@@ -1,0 +1,18 @@
+### 
+GET http://localhost:5000/test/method/1
+
+###
+GET http://localhost:5000/test/method/1?test=True
+
+### 
+POST http://localhost:5000/test/method/1
+Content-Type: application/json
+
+{"json" : "json데이터는 dict형식 + 쌍따옴표를 반드시 사용해야한다."}
+
+### 
+POST http://localhost:5000/test/method/1
+# Content-Type: application/json
+Content-Type: application/x-www-form-urlencoded
+
+form_data는=keyword방식으로 따옴표없이 전송한다.
