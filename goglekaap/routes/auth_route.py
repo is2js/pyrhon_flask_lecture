@@ -1,15 +1,21 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, flash
+from flask.helpers import url_for
+from goglekaap.forms.auth_form import LoginForm, RegisterForm
 
 NAME = 'auth'
 
 bp = Blueprint(NAME, __name__, url_prefix='/auth')
 
+@bp.route('/')
+def index():
+    return redirect(url_for(f'{NAME}.login'))
 
-
-from goglekaap.forms.auth_form import LoginForm, RegisterForm
     
 @bp.route('/login', methods = ['GET', 'POST'])
 def login():
+    # QQQ
+    flash("ERROR!!")
+
     form = LoginForm()
     # 1. form route는 GET-render_template의 화면 보여주기 외에
     # - POST로 form 버튼을 눌렀을 때,데이터 생성 및 수정을 해줘야한다.
@@ -30,8 +36,8 @@ def login():
         return f"{user_id}, {password}"
     else:
         # 2. POST인데,  valid 를 통과못할시가 else다. error부분이므로 pass시켜놓고..나중에 에러처리하자.
-        # TODO: ERROR
-        pass
+        # TODO: wtf validator에 걸리는 ERROR (DB에러는 wtf통과후에.. 다시 판단)
+        flash_form_errors(form)
 
     return render_template(f'{NAME}/login.html', form=form)
     
@@ -57,8 +63,13 @@ def register():
         return f"{user_id}, {user_name}, {password}, {repassword}"
     else:
         # 4) POST인데,(validator 통과못햇을 때!)
-        # print("?", form.errors)
-        print("GET일 때도 들어오나요?")
-        pass
+        # TODO: wtf validator에 걸리는 ERROR (DB에러는 wtf통과후에.. 다시 판단)
+        flash_form_errors(form)
 
     return render_template(f'{NAME}/register.html', form=form)
+
+
+def flash_form_errors(form):
+    for _, errors in form.errors.items():
+        for e in errors:
+            flash(e)
